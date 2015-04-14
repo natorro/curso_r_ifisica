@@ -1,0 +1,8 @@
+OLD_COURSE/
+*~
+presentaciones/
+.DS_Store
+.Rproj.user
+.Rhistory
+datadump.R
+dputdata.R
