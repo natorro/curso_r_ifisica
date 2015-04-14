@@ -201,3 +201,41 @@ airquality[good, ][1:6, ]
 # write.table(), writeLines(), dump(), dput(), save(), serialize()
 data <- read.table("myfile.txt")
 
+# Using dput to save an r object
+x <- data.frame(a = 1, b = "a")
+x
+dput(x)
+dput(x, "dputdata.R")
+recoveredData <- dget("dputdata.R")
+recoveredData
+
+# Using dump to save an r object
+x <- "somechar"
+y <- data.frame(a = 1, b = "a")
+dump(c("x", "y"), file = "datadump.R")
+
+rm(x, y)
+rm("recoveredData")
+ls()
+x
+y
+source("datadump.R")
+x
+y
+
+# Connections
+conection <- file("hola.txt", "r")
+data <- read.csv(conection)
+close(con)
+data <- read.csv("hola.txt")
+# Conection to a gz file
+conection2 <- gzfile("words.gz")
+x <- readLines(conection2, 10)
+x
+# Conection to a URL
+conection3 <- url("http://www.jhsph.edu", "r")
+conection3
+x <- readLines(conection3)
+head(x)
+summary(x)
+x[24]
