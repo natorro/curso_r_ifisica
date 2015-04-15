@@ -312,3 +312,26 @@ while(z >= 3 && z <= 10){
     z <- z - 1
   }
 }
+
+#repeat
+x <- 1
+tol <- 1e-8
+
+repeat{
+  x1 <- computeEstimate()
+  
+  if(abs(x1 - x) < tol){
+    break
+  } else {
+    x <- x1
+  }
+}
+
+# next - return
+for (i in 1:100) {
+  if (i <= 20) {
+    next
+  }
+  #Do something
+  return()
+}
