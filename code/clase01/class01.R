@@ -385,5 +385,8 @@ paste("hol", "a", se=" ")
 # takes the dot product and then returns both results in a list.
 
 
+# Create a function that takes as an argument a matrix and gives back the
+# mean o every row in the form of a vector
+
 # Crear una función que tome dos vectores y los sume y los multiplique 
 # y regrese
