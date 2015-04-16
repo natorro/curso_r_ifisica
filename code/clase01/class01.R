@@ -3,7 +3,7 @@ setwd()
 ls()
 
 # Evaluation
-x <- 1
+x <- 2
 print(x)
 x
 msg <- "hello"
