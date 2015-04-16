@@ -335,3 +335,55 @@ for (i in 1:100) {
   #Do something
   return()
 }
+
+#functions, 
+# 1. can be passed as arguments to other functions
+# 2. can be nested
+# 3. named arguments
+
+nameOfFunction <- function(<arguments>){
+  #do something here
+}
+
+# argument matching
+misdatos <- rnorm(100)
+var(data)
+var(x = data)
+var(x = data, na.rm = FALSE)
+var(na.rm = FALSE, x = data )
+var(na.rm = FALSE, data)
+
+# Definition
+f <- function(a, b = 1, c = 2, d = NULL){
+  
+}
+
+# Lazy evaluation
+g <- function(a, b){
+  a ^ 2
+}
+g(2)
+g(2, 4)
+
+g <- function(a, b){
+  print(a)
+  print(b)
+}
+
+g(5)
+
+# ... argument
+
+mygraphic <- function(x, y, type="l", ...) {
+  plot(x, y, type = type, ...)
+}
+
+paste("hol", "a", sep=" ")
+paste("hol", "a", se=" ")
+
+# Create a function that takes two vectors and sum them together and 
+# takes the dot product and then returns both results in a list.
+
+
+# Crear una función que tome dos vectores y los sume y los multiplique 
+# y regrese
