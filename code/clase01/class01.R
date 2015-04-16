@@ -268,8 +268,8 @@ for(i in 1:10){
 
 x <- c("a", "b", "c", "d")
 
-for(i in 1:4){
-  print(x[i])
+for(i in x){
+  print(i)
 }
 
 for(i in seq_along(x)){
@@ -285,7 +285,7 @@ for(i in 1:4) print(x[i])
 # for loops can be nested
 
 x <- matrix(1:6, 2, 3)
-
+x
 for(i in seq_len(nrow(x))){
   for(j in seq_len(ncol(x))){
     print(x[i, j])
@@ -345,6 +345,20 @@ nameOfFunction <- function(<arguments>){
   #do something here
 }
 
+alreves <- function(x){
+  if(TRUE == is.matrix(x)){
+    print("Error: x is not a matrix")
+  } else{
+    size <- length(x)
+    y <- vector()
+    for(i in 1:size){
+      j <- i - 1
+      y[i] <- x[size-j]
+    }
+    y
+  }
+}
+
 # argument matching
 misdatos <- rnorm(100)
 var(data)
@@ -386,4 +400,4 @@ paste("hol", "a", se=" ")
 
 
 # Crear una función que tome dos vectores y los sume y los multiplique 
-# y regrese
+# y regrese ambos vectores en forma de lista
