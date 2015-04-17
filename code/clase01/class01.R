@@ -463,7 +463,7 @@ unclass(as.Date("2015-01-01"))-unclass(as.Date("1977-12-25"))
 weekdays()
 months()
 
-as.Date("2015-01-01"")
+as.Date("2015-01-01")
 Sys.time()
 x <- as.Date(Sys.time(),format = "d%M%Y%")
 names(unclass(as.POSIXlt(x)))
