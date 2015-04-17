@@ -6,3 +6,5 @@ presentaciones/
 .Rhistory
 datadump.R
 dputdata.R
+.Rhistory
+.gitignore
