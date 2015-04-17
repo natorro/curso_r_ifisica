@@ -455,6 +455,148 @@ B <- matrix(21:36, 4, 4)
 B
 A %*% B
 
+# Algebra lineal con matrices
+# Determinante:
+det(X)
+
+# Diagonal
+diag(X)
+
+# Podemos encontrar la traza:
+
+traza <- function(datos) sum(diag(datos))
+
+# Podemos crear una matriz diagonal con diag:
+
+diag(c(1:3))
+
+# La transpuesta:
+
+t(X)
+
+# Matrices triangulares
+# Usamos las funciones lower.tri() y uppper.tri()
+# para obtener matrices
+X
+upper.tri(X)
+lower.tri(X)
+X3 <- X
+X3[upper.tri(X, diag=TRUE)] <- 0
+
+# Aritmetica de matrices
+
+# Multiplicacion por un escalar
+Y <- 2 * X
+Y
+
+# Suma elemento a elemento
+
+X
+Y
+X + Y
+
+# Multiplicacion de matrices e
+# inversion de una matriz
+
+# Recordemos que para que podamos multiplicar dos matrices
+# estas deben ser conformes entre ellas.
+# El operador es %*%
+
+X %*% Y
+
+# Creemos matrices que no son conformes
+
+# Una manera mas eficiente de crear t(Y) %*% X
+
+#crossprod()
+
+# Inversion de matrices
+
+A <- matrix(c(3, 1, -4, 2), nrow=2)
+
+# Usamos las funciones solve() y qr.solve()
+
+solve(A)
+solve(A) %*% A
+
+qr.solve(A) %*% A
+
+# Como resolver un sistema de ecuaciones lineales:
+
+b <- c(1, 2, 3)
+
+b
+X <-1/cbind(seq(1, 3), seq(2, 4), seq(3, 5))
+X
+x <- solve(X, b)
+x
+
+# Eigenvalues y eigenvectors
+
+eigen(X)
+
+# Descomposicion de valor singular
+# Tres matrices cuadradas U D V
+# D es diagonal
+# U y V son ortogonales
+# La relacion entre estas tres matrices es:
+# A = U D t(V)
+
+# Podemos encontrar estos valores de la siguiente manera:
+X.svd <- svd(X)
+
+# Podemos ver que esta matriz es correcta
+X.svd$u %*% diag(X.svd$d) %*% t(X.svd$v)
+# Podemos encontrar la inversa con esto
+X.svd$v %*% diag(1/X.svd$d) %*% t(X.svd$u)
+
+# La decomposicion Cholesky
+# Si A es una matriz positiva definida, tiene raiz cuadrada
+# De hecho hay varias matrices tal que Bcuadrada = A
+# La decomposicion Cholesky toma esa idea de tal manera que
+# t(U)U = A
+
+X.chol <- chol(X)
+X.chol
+crossprod(X.chol, X.chol)
+chol2inv(X.chol)
+
+# Para encontrar la solucion a un problema lineal
+b <- seq(1, 3)
+y <- forwardsolve(t(X.chol), b)
+backsolve(X.chol, y)
+
+# Descomposicion QR
+
+X.qr <- qr(X)
+X.qr
+Q <- qr.Q(X.qr)
+Q
+R <- qr.R(X.qr)
+R
+Q %*% R
+
+qr.solve(R) %*% t(Q)
+
+# Numero de condicion
+kappa(X)
+
+kappa(diag(c(1, 1, 1)))
+
+# Funciones outer()
+x1 <- seq(1, 5)
+x1
+outer(x1, x1, "/")
+outer(x1, x1, "-")
+y <- seq(5, 10)
+outer(x1, y, "+")
+
+# Funcion apply() mucho mas eficiente computacionalmente
+apply(X, 1, sum)
+X
+sum(X[3, ])
+
+
 # dates and times
 # Date Class
 
@@ -473,10 +615,9 @@ datestring <- c("January 10, 2012 10:40", "December 9, 2011 9:12")
 datestring
 class(strptime(datestring, "%B %d, %Y %H:%M"))
 
-fix(function)
+fix(class)
 
 # Graficación basica
-
 x <- c(12, 15, 13, 20, 14, 16, 10, 10, 8, 15)
 hist(x)
 x <- seq(1, 10)
@@ -488,114 +629,104 @@ curve(x^2 -10 * x, from = 1, to = 10)
 median(x)
 var(x)
 summary(x)
-
+head(x)
 
 # Graficos
 # Usaremos el dataset VADeaths
 VADeaths
-        
-        # Haremos nuestro primer grafica de barras
-        
-        barplot(VADeaths, beside=TRUE, legend=TRUE,
+
+# Haremos nuestro primer grafica de barras
+barplot(VADeaths, beside=TRUE, legend=TRUE,
         ylim = c(0, 90), ylab="Muertes c/1000",
         main = "Tasa de muertes en Virginia")
         
-        dotchart(VADeaths, xlim=c(0, 75),
+dotchart(VADeaths, xlim=c(0, 75),
         xlab = "Muertes c/1000",
         main = "Tasa de muertes en Virginia")
         
-        # Graficas de pay
-        groupsizes <- c(18, 30, 32, 10, 10)
-        labels <- c("A", "B", "C", "D", "F")
+# Graficas de pay
+groupsizes <- c(18, 30, 32, 10, 10)
+labels <- c("A", "B", "C", "D", "F")
+pie(groupsizes, labels, col=c("grey40", "white",
+    "red", "grey",
+      "grey90"))
         
-        pie(groupsizes, labels, col=c("grey40", "white",
-        "red", "grey",
-        "grey90"))
+# grafica de pastel usando los colores del sistema
+# (los primeros veinte)
         
-        # Ejemplo que hicimos en clase para generar una
-        # grafica de pastel usando los colores del sistema
-        # (los primeros veinte)
+colores <- colors()
+mis_valores <- rep(1, 20)
+pie(mis_valores, col=colores[1:20])
         
-        colores <- colors()
-        mis_valores <- rep(1, 20)
-        pie(mis_valores, col=colores[1:20])
+# Histogramas
+# Los intervalos son log_2(n) + 1 esto se conoce
+# Como la regla de Sturges
         
-        # Histogramas
-        # Los intervalos son log_2(n) + 1 esto se conoce
-        # Como la regla de Sturges
-        
-        x <- rnorm(100)
-        hist(x)
+x <- rnorm(100)
+hist(x)
 hist(x, breaks = "Sturges")
 hist(x, breaks = "Scott")
 hist(x, breaks = "Freedman-Diaconis", main="HOLA MUNDO")
         
-        # Boxplots
+# Boxplots
         
-        boxplot(Sepal.Length ~ Species, data = iris,
+boxplot(Sepal.Length ~ Species, data = iris,
         ylab = "Longitud de sepalo (cm)",
         main = "Medidas de Iris",
         boxwex = 0.5)
         
-        # Graficas de dispersion
-        x <- rnorm(100)
-        y <- rpois(100, 30)
-        mean(y)
+# Graficas de dispersion
+x <- rnorm(100)
+y <- rpois(100, 30)
+mean(y)
         
-        plot(x, y, main = "Poisson vs. Normal")
-        plot(x, y, type="l")
-        plot(sort(x), sort(y), type = "l")
+plot(x, y, main = "Poisson vs. Normal")
+plot(x, y, type="l")
+plot(sort(x), sort(y), type = "l")
         
-        # qqplots
+# qqplots
         
-        X <- rnorm(1000)
-        
-        A <- rnorm(1000)
-        qqplot(X, A, main = "A y X son iguales")
-        
-        B <- rnorm(1000, mean = 3, sd = 2)
-        qqplot(X, B, main = "B es X re-escalada")
-        
-        C <- rt(1000, df=2)
-        qqplot(X, C, main = "C tiene colas pesadas")
-        
-        D <- exp(rnorm(1000))
-        qqplot(X, D, main = "D esta sesgada a la derecha")
+X <- rnorm(1000)
+A <- rnorm(1000)
+qqplot(X, A, main = "A y X son iguales")
+B <- rnorm(1000, mean = 3, sd = 2)
+qqplot(X, B, main = "B es X re-escalada")
+C <- rt(1000, df=2)
+qqplot(X, C, main = "C tiene colas pesadas")
+D <- exp(rnorm(1000))
+qqplot(X, D, main = "D esta sesgada a la derecha")
 # Funciones de graficacion de bajo nivel
 
 # points(x, y, ...)
-        # lines(x, y, ...)
-        # text(x, y, labels, ...)
-        # abline(a, b, ...) linea y = a + bx
-        # abline(h=y, ...) linea horizontal
-        # abline(v=x, ...) linea vertical
-        # polygon(x, y, ...) añade un poligono cerrado
-        # segments(x0, y0, x1, y1, ..) dibuja segmentos de linea
-        # arrows(x0, y0, x1, y1, ...) dibuja flechas
-        # symbols(x, y, ... ) dibuja circulos, cuadrados, termometros, etc
-        # legend(x, y, legend, ...) dibuja una leyenda
+# lines(x, y, ...)
+# text(x, y, labels, ...)
+# abline(a, b, ...) linea y = a + bx
+# abline(h=y, ...) linea horizontal
+# abline(v=x, ...) linea vertical
+# polygon(x, y, ...) añade un poligono cerrado
+# segments(x0, y0, x1, y1, ..) dibuja segmentos de linea
+# arrows(x0, y0, x1, y1, ...) dibuja flechas
+# symbols(x, y, ... ) dibuja circulos, cuadrados, termometros, etc
+# legend(x, y, legend, ...) dibuja una leyenda
         
-        # Ejemplo
+# Ejemplo
         
-        sex <- c("M", "F", "M", "F", "F", "M", "F", "M")
-        length.index <- c(7.9, 6.5, 8.4, 5.5, 6.5, 8.0, 7.0, 7.5)
-        width <- c(2.3, 1.7, 2.6, 1.7, 1.9, 2.1, 1.8, 1.9)
-        indexfinger <- data.frame(sex, length.index, width)
-        indexfinger
+sex <- c("M", "F", "M", "F", "F", "M", "F", "M")
+length.index <- c(7.9, 6.5, 8.4, 5.5, 6.5, 8.0, 7.0, 7.5)
+width <- c(2.3, 1.7, 2.6, 1.7, 1.9, 2.1, 1.8, 1.9)
+indexfinger <- data.frame(sex, length.index, width)
+indexfinger
         
-        #plot(width ~ length.index, data=indexfinger)
+#plot(width ~ length.index, data=indexfinger)
+with(indexfinger[c(3, 7), ], points(length.index, width, pch=17))
+plot(width ~ length.index, pch=as.character(sex), data=indexfinger)
+abline(lm(width ~ length.index, data=indexfinger, subset=sex=="M"), lty=1)
+abline(lm(width ~ length.index, data=indexfinger, subset=sex=="F"), lty=2)
+legend("topleft", legend=c("Male", "Female"), lty=1:2)
         
-        with(indexfinger[c(3, 7), ], points(length.index, width, pch=17))
+# Funciones para anotar
         
-        plot(width ~ length.index, pch=as.character(sex), data=indexfinger)
-        
-        abline(lm(width ~ length.index, data=indexfinger, subset=sex=="M"), lty=1)
-        abline(lm(width ~ length.index, data=indexfinger, subset=sex=="F"), lty=2)
-        legend("topleft", legend=c("Male", "Female"), lty=1:2)
-        
-        # Funciones para anotar
-        
-        # title(main, sub, xlab, ylab, ...) agrega un titulo
+# title(main, sub, xlab, ylab, ...) agrega un titulo
         
 # mtext(text, side, line, ...) dibuja texto en los margenes
 # axis(side, at, labels, ...) agrega un eje a la grafica
@@ -603,40 +734,35 @@ hist(x, breaks = "Freedman-Diaconis", main="HOLA MUNDO")
 
 # Usando locator para localizar exactamente:
 
-        mi_vector <- rnorm(10000)
-        hist(mi_vector)
-        text(c(-3, 1866),"nv=75")
-        
-        par(bg="yellow")
-        
-        hist(mi_vector)
-        
-        par(bg="white")
-        # Podemos intentar usar lowess para ajustar una recta:
-        x <- rnorm(100)
-        y <- rnorm(100)
-        plot(data.frame(x, y))
-        lines(lowess(data.frame(x, y)))
-        
-        # Funciones explí?citas con curve
-        
-        g <- function(t){
-        return (t^2+1)^0.5
-        }
-        
-        x <- seq(0,5,length=10000)
-        
-        y <- g(x)
-        
-        plot(x,y,type="l")
-        
-        curve((x^2+1)^0.5,0,5)
-        
-        curve(x^2, 0, 10)
-        curve((x^2+1)^0.5,0,5, add=TRUE)
-        curve((x^2+1)^0.5,0,5,add=TRUE)
-# optimization of code
+mi_vector <- rnorm(10000)
+hist(mi_vector)
+text(c(-3, 1866),"nv=75")
+par(bg="yellow")
+hist(mi_vector)
 
+par(bg="white")
+# Podemos intentar usar lowess para ajustar una recta:
+x <- rnorm(100)
+y <- rnorm(100)
+plot(data.frame(x, y))
+lines(lowess(data.frame(x, y)))
+        
+# Funciones explí?citas con curve
+        
+g <- function(t){
+     return (t^2+1)^0.5
+     }
+        
+x <- seq(0,5,length=10000)
+y <- g(x)
+        
+plot(x,y,type="l")
+curve((x^2+1)^0.5,0,5)
+curve(x^2, 0, 10)
+curve((x^2+1)^0.5,0,5, add=TRUE)
+curve((x^2+1)^0.5,0,5,add=TRUE)
+
+# optimization of code
 x <- rnorm(10000)
 y <- rnorm(10000)
 z <- c()
@@ -654,356 +780,179 @@ system.time(
   }
   )
 system.time(z <- x + y)
+
 f <- function(x) return((x^2+1)^0.5)
 
 plot(f,0,5)
         
-        # Guardando a archivos:
+# Guardando a archivos:
+#pdf("c://archivo.pdf")
+#dev.list()
+#dev.set()
+#dev.off()
+# gráficas en tres dimensiones
         
-        #pdf("c://archivo.pdf")
+library(lattice)
+a <- 1:10
+b <- 1:15
+eg <- expand.grid(x=a,y=b)
+eg$z <- eg$x^2 + eg$x * eg$y
+wireframe(z ~ x+y, eg)
         
-        #dev.list()
+#cloud:
+mis_datos <- data.frame(rnorm(100),
+                        rexp(100),
+                        rnorm(100))
+names(mis_datos) <- c("x", "y", "z")
         
-        #dev.set()
+cloud(z ~ x + y, data=mis_datos)
+cloud(z ~ x + y, eg, add=TRUE)
+
+# Ya sabemos hacer histogramas
+datos <- rexp(10000)
+hist(datos)
         
-        #dev.off()
-        
-        # gráficas en tres dimensiones
-        
-        library(lattice)
-        a <- 1:10
-        b <- 1:15
-        eg <- expand.grid(x=a,y=b)
-        eg$z <- eg$x^2 + eg$x * eg$y
-        wireframe(z ~ x+y, eg)
-        
-        #cloud:
-        mis_datos <- data.frame(rnorm(100),
-        rexp(100),
-        rnorm(100))
-        names(mis_datos) <- c("x", "y", "z")
-        
-        cloud(z ~ x + y, data=mis_datos)
-        cloud(z ~ x + y, eg, add=TRUE)
-        # Ya sabemos hacer histogramas
-        datos <- rexp(10000)
-        hist(datos)
-        
-        hist(datos, breaks=15)
+hist(datos, breaks=15)
 hist(datos, breaks=15, freq=F)
 
 density(datos)
         
-        #lines()
+#lines()
+holas <- rnorm(1000)
+hist(holas)
+density(holas)
+lines(density(holas))
+hist(holas, freq=F)
+lines(density(holas, na.rm=T))
+
+media <- mean(holas)
+est_dev <- sd(holas)
+hist(holas, freq=F)
+curve(dnorm(x, media, est_dev), add=T)
         
-        
-        holas <- rnorm(1000)
-        hist(holas)
-        density(holas)
-        lines(density(holas))
-        
-        hist(holas, freq=F)
-        lines(density(holas, na.rm=T))
-        
-        media <- mean(holas)
-        est_dev <- sd(holas)
-        hist(holas, freq=F)
-        curve(dnorm(x, media, est_dev), add=T)
-        
-        # Y podemos agregar más opciones
-        
-        hist(holas, breaks = 15, freq = F,
+# Y podemos agregar más opciones
+hist(holas, breaks = 15, freq = F,
         main = "Nuestro histograma editado",
         xlab = "Satisfaccion de vida",
         #  xlim = c(5,40),
         #  ylim = c(0,.1),
         col = "grey", las = 1)
         
-        curve(dnorm(x, media, est_dev), add = T,
+curve(dnorm(x, media, est_dev), add = T,
         lty = 2, lwd = 2, col = "blue")
         
-        abline(h = 0)
-        # en vez de coordenadas podemos usar locator(1) para escoger
+abline(h = 0)
+# en vez de coordenadas podemos usar locator(1) para escoger
 # exactamente donde queremos la gráfica.
 
 symbols(100, 100, circles = 2, add = T,
         inches = F, fg = "red", lwd = 2)
-        # Exactamente lo mismo, podemos usar locator(1) en vez de 100, 100
+# Exactamente lo mismo, podemos usar locator(1) en vez de 100, 100
         
-        text(100, 110, "Punto raro", col = "red")
+text(100, 110, "Punto raro", col = "red")
         
-        # Comparar dos gráficas
+# Comparar dos gráficas
         
-        ls.1 <- rnorm(300)
+ls.1 <- rnorm(300)
+m <- mean(ls.1, na.rm = T)
+sd <- sd(ls.1, na.rm = T)
+curve(dnorm(x, m, sd), m-3*sd, m+3*sd,lty = 2)
+lines(density(ls.1, na.rm = T), lwd = 2)
+legend("topleft", c("Función de densidad normal", "Densidad de Kernel"),
+       lty = c(2,1), lwd = c(1,2), box.lty = 0)
         
-        m <- mean(ls.1, na.rm = T)
+# QQ Norm y QQPlot
+qqnorm(ls.1)
+library(car)
+qqPlot(ls.1)
         
-        sd <- sd(ls.1, na.rm = T)
+# Una más
         
-        curve(dnorm(x, m, sd), m-3*sd, m+3*sd,lty = 2)
-        
-        lines(density(ls.1, na.rm = T), lwd = 2)
-        
-        legend("topleft", c("Función de densidad normal",
-        "Densidad de Kernel"),
-        lty = c(2,1), lwd = c(1,2), box.lty = 0)
-        
-        # QQ Norm y QQPlot
-        
-        qqnorm(ls.1)
-        library(car)
-        qqPlot(ls.1)
-        
-        # Una más
-        
-        ls.1 <- rnorm(300)
-        valores <- 1:300
-        
-        lin <- lm(ls.1 ~ valores)
-        
-        plot(ls.1 ~ valores)
-
+ls.1 <- rnorm(300)
+valores <- 1:300
+lin <- lm(ls.1 ~ valores)
+plot(ls.1 ~ valores)
 abline(lin, lwd = 2)
         
-        x = predict(lin, interval = "confidence")
+x = predict(lin, interval = "confidence")
+x[1:5, ]
+lines(valores, x[,2], lty = 2, col = 2)
+lines(valores, x[,3], lty = 2, col = 2)
         
-        x[1:5, ]
-        lines(valores, x[,2], lty = 2, col = 2)
-        lines(valores, x[,3], lty = 2, col = 2)
+# podemos crear bandas
+plot(ls.1 ~ valores)
+polygon(c(valores, rev(valores)), c(x[,2], rev(x[,3])), col = "lightgrey", border = NA)
+abline(lin, lwd = 2)
+axis(2, labels = F)
+axis(4, labels = F, lwd.ticks = 0)
         
-        # podemos crear bandas
-        plot(ls.1 ~ valores)
-        polygon(c(valores, rev(valores)), c(x[,2], rev(x[,3])), col = "lightgrey", border = NA)
-        abline(lin, lwd = 2)
-        axis(2, labels = F)
-        axis(4, labels = F, lwd.ticks = 0)
-        
-        #Podemos poner más de una gráfica
-        
-        par(mfrow=c(2, 2))
-        plot(lin)
+#Podemos poner más de una gráfica
+
+par(mfrow=c(2, 2))
+plot(lin)
         
         
 # Una más
 
 ls.1 <- rnorm(300)
-        valores <- 1:300
+valores <- 1:300
+lin <- lm(ls.1 ~ valores)
+plot(ls.1 ~ valores)
+abline(lin, lwd = 2)
+x = predict(lin, interval = "confidence")
+x[1:5, ]
+lines(valores, x[,2], lty = 2, col = 2)
+lines(valores, x[,3], lty = 2, col = 2)
         
-        lin <- lm(ls.1 ~ valores)
+# podemos crear bandas
+plot(ls.1 ~ valores)
+polygon(c(valores, rev(valores)), c(x[,2], rev(x[,3])), col = "lightgrey", border = NA)
+abline(lin, lwd = 2)
+axis(2, labels = F)
+axis(4, labels = F, lwd.ticks = 0)
         
-        plot(ls.1 ~ valores)
+# Podemos poner más de una gráfica
+par(mfrow=c(2, 2))
+plot(lin)
         
-        abline(lin, lwd = 2)
-        
-        x = predict(lin, interval = "confidence")
-        
-        x[1:5, ]
-        lines(valores, x[,2], lty = 2, col = 2)
-        lines(valores, x[,3], lty = 2, col = 2)
-        
-        # podemos crear bandas
-        plot(ls.1 ~ valores)
-        polygon(c(valores, rev(valores)), c(x[,2], rev(x[,3])), col = "lightgrey", border = NA)
-        abline(lin, lwd = 2)
-        axis(2, labels = F)
-        axis(4, labels = F, lwd.ticks = 0)
-        
-        # Podemos poner más de una gráfica
-        
-        par(mfrow=c(2, 2))
-        plot(lin)
-        
-# Algebra lineal con matrices
-# Determinante:
-det(X)
-        
-        # Diagonal
-        diag(X)
-        
-        # Podemos encontrar la traza:
-        
-        traza <- function(datos) sum(diag(datos))
-        
-        # Podemos crear una matriz diagonal con diag:
-        
-        diag(c(1:3))
-        
-        # La transpuesta:
-        
-        t(X)
-        
-        # Matrices triangulares
-        # Usamos las funciones lower.tri() y uppper.tri()
-        # para obtener matrices
-        X
-        upper.tri(X)
-        lower.tri(X)
-        X3 <- X
-        X3[upper.tri(X, diag=TRUE)] <- 0
-        
-        # Aritmetica de matrices
-        
-        # Multiplicacion por un escalar
-        Y <- 2 * X
-        Y
-
-# Suma elemento a elemento
-
-X
-        Y
-        X + Y
-        
-        # Multiplicacion de matrices e
-        # inversion de una matriz
-        
-        # Recordemos que para que podamos multiplicar dos matrices
-        # estas deben ser conformes entre ellas.
-        # El operador es %*%
-        
-        X %*% Y
-        
-        # Creemos matrices que no son conformes
-        
-        # Una manera mas eficiente de crear t(Y) %*% X
-        
-        #crossprod()
-        
-        # Inversion de matrices
-        
-        A <- matrix(c(3, 1, -4, 2), nrow=2)
-        
-        # Usamos las funciones solve() y qr.solve()
-        
-        solve(A)
-        solve(A) %*% A
-        
-        qr.solve(A) %*% A
-        
-        # Como resolver un sistema de ecuaciones lineales:
-        
-        b <- c(1, 2, 3)
-        
-        b
-X <-1/cbind(seq(1, 3), seq(2, 4), seq(3, 5))
-X
-        x <- solve(X, b)
-        x
-        
-        # Eigenvalues y eigenvectors
-        
-        eigen(X)
-        
-        # Descomposicion de valor singular
-        # Tres matrices cuadradas U D V
-        # D es diagonal
-        # U y V son ortogonales
-        # La relacion entre estas tres matrices es:
-        # A = U D t(V)
-        
-        # Podemos encontrar estos valores de la siguiente manera:
-        X.svd <- svd(X)
-        
-        # Podemos ver que esta matriz es correcta
-        X.svd$u %*% diag(X.svd$d) %*% t(X.svd$v)
-        # Podemos encontrar la inversa con esto
-        X.svd$v %*% diag(1/X.svd$d) %*% t(X.svd$u)
-        
-        # La decomposicion Cholesky
-        # Si A es una matriz positiva definida, tiene raiz cuadrada
-        # De hecho hay varias matrices tal que Bcuadrada = A
-        # La decomposicion Cholesky toma esa idea de tal manera que
-        # t(U)U = A
-        
-        X.chol <- chol(X)
-        X.chol
-        crossprod(X.chol, X.chol)
-        chol2inv(X.chol)
-        
-        # Para encontrar la solucion a un problema lineal
-b <- seq(1, 3)
-y <- forwardsolve(t(X.chol), b)
-        backsolve(X.chol, y)
-        
-        # Descomposicion QR
-        
-        X.qr <- qr(X)
-        X.qr
-        Q <- qr.Q(X.qr)
-        Q
-        R <- qr.R(X.qr)
-        R
-        Q %*% R
-        
-        qr.solve(R) %*% t(Q)
-        
-        # Numero de condicion
-        kappa(X)
-        
-        kappa(diag(c(1, 1, 1)))
-        
-        # Funciones outer()
-        x1 <- seq(1, 5)
-        x1
-        outer(x1, x1, "/")
-        outer(x1, x1, "-")
-        y <- seq(5, 10)
-        outer(x1, y, "+")
-        
-        # Funcion apply() mucho mas eficiente computacionalmente
-        apply(X, 1, sum)
-        X
-        sum(X[3, ])
-        
-        
-        # Graficando datos con base
+# Graficando datos con base
 library(ggplot2)
 #library(fImport)
         library(tseries)
-        telmex <- get.hist.quote(instrument="TELMEXL.MX", start="2010-04-15", end="2011-09-27", quote=c("O","H","L","C","A","V"), provider="yahoo", retclass="zoo")
-        
-        america_movil <- get.hist.quote(instrument="AMX", start="2010-04-15", end="2011-09-27", quote=c("O","H","L","C","A","V"), provider="yahoo", retclass="zoo")
-        
-        
-        nrow(telmex)
-        nrow(america_movil)
-        
-        telmex[1:5, ]
-        america_movil[1:5, ]
+telmex <- get.hist.quote(instrument="TELMEXL.MX", start="2010-04-15", end="2011-09-27", quote=c("O","H","L","C","A","V"), provider="yahoo", retclass="zoo")
+america_movil <- get.hist.quote(instrument="AMX", start="2010-04-15", end="2011-09-27", quote=c("O","H","L","C","A","V"), provider="yahoo", retclass="zoo")
+nrow(telmex)
+nrow(america_movil)
+
+telmex[1:5, ]
+america_movil[1:5, ]
         
         
-        plot(telmex$Open)
+plot(telmex$Open)
+plot(telmex)
+plot(telmex$Open - telmex$Close)
+plot(as.numeric(telmex$Open- telmex$Close), type="line")
+hola <- as.numeric(telmex$Open-telmex$Close)
+x<- 1:length(hola)
+qplot(x, hola, geom="line", ylab="mi titulo")
         
-        plot(telmex)
+datos <- NULL
+datos[1] <- telmex$Volume[1]
+for(i in 2:length(telmex$Volume)){
+    datos[i] <- as.numeric(telmex$Volume[i]) - as.numeric(telmex$Volume[i-1])
+}
         
-        plot(telmex$Open - telmex$Close)
-        
-        plot(as.numeric(telmex$Open- telmex$Close), type="line")
-        
-        hola <- as.numeric(telmex$Open-telmex$Close)
-        x<- 1:length(hola)
-        qplot(x, hola, geom="line", ylab="mi titulo")
-        
-        datos <- NULL
-        datos[1] <- telmex$Volume[1]
-        for(i in 2:length(telmex$Volume)){
-        datos[i] <- as.numeric(telmex$Volume[i]) - as.numeric(telmex$Volume[i-1])
-        }
-        
-        plot(datos, type="line", ylab="cambios en Volumen día a día")
-        
-        hola2 <- NULL
-        for(i in 2:length(telmex$Volume)){
+plot(datos, type="line", ylab="cambios en Volumen día a día")
+hola2 <- NULL
+for(i in 2:length(telmex$Volume)){
         hola2[i] <- as.numeric(telmex$Open[i]) - as.numeric(telmex$Close[i-1])
-        }
-        
-        
-        #par(mfrow=c(3, 1))
-        plot(hola, type="line", ylab="cambios en Volumen dia x dia")
-        plot(telmex$Open-telmex$Close, ylab="Open(i)-Close(i)", xlab="")
-        plot(hola2, type="line", ylab="cambios cierre y apertura")
-        
-        plot(density(hola))
-        plot(density(telmex$Open-telmex$Close))
-        hola2 <- hola2[!(is.na(hola2))]
-        plot(density(hola2))
-        
+}
+
+#par(mfrow=c(3, 1))
+plot(hola, type="line", ylab="cambios en Volumen dia x dia")
+plot(telmex$Open-telmex$Close, ylab="Open(i)-Close(i)", xlab="")
+plot(hola2, type="line", ylab="cambios cierre y apertura")
+plot(density(hola))
+plot(density(telmex$Open-telmex$Close))
+hola2 <- hola2[!(is.na(hola2))]
+plot(density(hola2))
